@@ -110,13 +110,13 @@ export function useTokenTransfer(): UseTokenTransferReturn {
         const destPublicKey = new PublicKey(destinationAddress);
         const initialDestBalances = await getAllTokenBalances(
           destPublicKey,
-          connection
+          connection,
         );
 
         const initialDestBalance =
           coin === "SOL"
-            ? initialDestBalances.find(b => b.token === "SOL")?.balance || 0
-            : initialDestBalances.find(b => b.mint === USDC_TOKEN_MINT)
+            ? initialDestBalances.find((b) => b.token === "SOL")?.balance || 0
+            : initialDestBalances.find((b) => b.mint === USDC_TOKEN_MINT)
                 ?.balance || 0;
 
         console.log("Initial destination balance:", initialDestBalance);
@@ -126,26 +126,29 @@ export function useTokenTransfer(): UseTokenTransferReturn {
           transaction,
           wallet: selectedWallet,
           chain: `solana:${SOLANA_CLUSTER}`,
+          options: {
+            sponsor: true,
+          },
         });
 
         console.log("Transaction result:", result);
         console.log(
           "Signature:",
-          Buffer.from(result.signature).toString("base64")
+          Buffer.from(result.signature).toString("base64"),
         );
 
         // Wait a bit for confirmation
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
 
         const finalDestBalances = await getAllTokenBalances(
           destPublicKey,
-          connection
+          connection,
         );
 
         const finalDestBalance =
           coin === "SOL"
-            ? finalDestBalances.find(b => b.token === "SOL")?.balance || 0
-            : finalDestBalances.find(b => b.mint === USDC_TOKEN_MINT)
+            ? finalDestBalances.find((b) => b.token === "SOL")?.balance || 0
+            : finalDestBalances.find((b) => b.mint === USDC_TOKEN_MINT)
                 ?.balance || 0;
 
         console.log("Final destination balance:", finalDestBalance);
@@ -158,7 +161,7 @@ export function useTokenTransfer(): UseTokenTransferReturn {
         setLoading(false);
       }
     },
-    [wallets, signAndSendTransaction, connection]
+    [wallets, signAndSendTransaction, connection],
   );
 
   return {
